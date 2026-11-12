@@ -9,8 +9,8 @@ set_website_title("Your Drafter Website")
 set_website_framed(False)
 set_site_information("Saumya Bhavsar", 
                      "F1 Tracker",
+                    planning = "",
                     sources = "",
-                    planing doc = "",
                     links = ["https://github.com/RaVen00-glitch/F1-Tracker"]
                     )
 
