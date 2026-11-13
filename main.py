@@ -1,30 +1,27 @@
 from bakery import assert_equal
 from drafter import *
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
-
-
+# Assignment requirements with documentation
 hide_debug_information()
-set_website_title("Your Drafter Website")
+set_website_title("F1 Tracker")
 set_website_framed(False)
 set_site_information("Saumya Bhavsar", 
                      "F1 Tracker",
-                    planning = "",
-                    sources = "",
+                    planning = "https://docs.google.com/document/d/1_5GNEVvNfyI6qp15A4fnTVAZitKaE4PsM-B88TpBANU/edit?usp=sharing",
+                    sources = "Claude and ChatGPT: https://docs.google.com/document/d/1YzF5rUaQT-8HzOwzh5b-wChEvR_sSiOtOhXIqNu0qqE/edit?usp=sharing"
                     links = ["https://github.com/RaVen00-glitch/F1-Tracker"]
                     )
 
-from dataclasses import dataclass, field
-from drafter import *
-# assert_equal is assumed to be available (add `from bakery import assert_equal` if your editor needs it)
 
-# ======================================================================
 # CONSTANTS - 2026 FORMULA 1 SEASON
 # Standings snapshot: after Round 20 (Sao Paulo), November 8, 2026.
 # The final three rounds are Las Vegas, Qatar, and Abu Dhabi.
-# ======================================================================
+
+# 25 points are given to the driver that comes in first.
 POINTS_FOR_WIN = 25
 
+# These are the names of each driver and what team they are currently on as of 2026 F1 season. 
 DRIVER_TEAMS = {
     "Kimi Antonelli": "Mercedes",
     "Max Verstappen": "Red Bull Racing",
@@ -53,8 +50,10 @@ DRIVER_TEAMS = {
     "Rafael Camara": "Haas F1 Team",
 }
 
-# Official constructor standings are stored separately because driver points
-# do not always add up directly to constructor points after driver changes.
+ """
+ Official constructor standings are stored separately because driver points
+ do not always add up directly to constructor points after driver changes.
+ """
 CONSTRUCTOR_STANDINGS = {
     "Mercedes": 652,
     "Ferrari": 510,
@@ -69,10 +68,21 @@ CONSTRUCTOR_STANDINGS = {
     "Cadillac": 0,
 }
 
+"""
+These are the two different type of race formats that an race can be. They are always random so-
+-that each seson, drivers and teams can adapt and innovate.
+"""
+
 RACE_FORMATS = {
     "Grand Prix": "A standard weekend: practice, qualifying, then one race.",
     "Sprint weekend": "Includes a sprint race in addition to the Grand Prix.",
 }
+
+
+"""
+These are all  of the famous and current cars that have won multiple races throughout one season
+of F1. 
+"""
 
 CAR_INFO = {
     "2026 F1 cars": "The 2026 season introduces a new generation of cars and power-unit regulations.",
@@ -82,6 +92,11 @@ CAR_INFO = {
     "Red Bull RB19 (2023)": "Won 21 of the 22 races that season.",
 }
 
+
+"""
+This is used to show and give a genral idea of what the building process is like behiend each F1 car.
+"""
+
 BUILD_STAGES = {
     "1. Design": "Engineers design the car on computers, balancing speed and the rules.",
     "2. Testing ideas": "Wind tunnels and simulations check how air flows over the car.",
@@ -90,21 +105,54 @@ BUILD_STAGES = {
     "5. Race weekend": "Mechanics adjust the car and perform pit stops during the race.",
 }
 
+
+"""
+This page is used to test the uses knowlage of F1 by providing various questions for them to answer.
+"""
+
 QUIZ_QUESTIONS = [
     "What does DRS stand for? (three words)",
     "What is the first starting spot on the grid called? (two words)",
     "How many points does a Grand Prix winner get?",
+    "How many teams compete in the 2026 F1 season?",
+    "What country is the Monza circuit located in?",
+    "What does DNF mean?",
+    "What flag signals the end of a race?",
+    "How many points does second place receive in a Grand Prix?",
+    "What is the name of Ferrari's home circuit?",
+    "What does F1 stand for?",
+    "What color flag indicates danger and requires drivers to slow down?",
+    "What is the area called where teams change tires during a race?",
+    "Which tire compound is generally the softest and fastest?",
+    "What does DRS help reduce?",
+    "How many points does third place receive in a Grand Prix?",
+    "What is the name of the championship awarded to the top-scoring team?"
 ]
+
 QUIZ_ANSWERS = [
     "drag reduction system",
     "pole position",
     "25",
+    "11",
+    "Italy",
+    "Did Not Finish",
+    "Chequered flag",
+    "18",
+    "Monza",
+    "Formula One",
+    "Yellow",
+    "Pit lane",
+    "Soft",
+    "Aerodynamic drag",
+    "15",
+    "Constructors' Championship",
 ]
 
 
-# ======================================================================
 # DATACLASSES
-# ======================================================================
+"""
+This dataclass is used to showcase the characteristics of each race in an F1 season. 
+"""
 @dataclass
 class Race:
     track: str
@@ -114,7 +162,9 @@ class Race:
     winner: str
     date: str = ""
 
-
+"""
+This state dataclass is used to keep and transfer the data from one page to another. 
+"""
 @dataclass
 class State:
     season: list[Race]
@@ -123,11 +173,12 @@ class State:
     quiz_score: int
     question_number: int
     constructors: dict[str, int] = field(default_factory=dict)
+  
 
+"""
+ STARTING DATA - 2026 SEASON SNAPSHOT AFTER ROUND 20
+"""
 
-# ======================================================================
-# STARTING DATA - 2026 SEASON SNAPSHOT AFTER ROUND 20
-# ======================================================================
 def make_starting_state() -> State:
     """Returns the current 2026 season data snapshot."""
     season = [
@@ -155,6 +206,10 @@ def make_starting_state() -> State:
         Race("Lusail", "Qatar", "Grand Prix", False, "", "Nov 27-29"),
         Race("Yas Marina", "United Arab Emirates", "Grand Prix", False, "", "Dec 4-6"),
     ]
+
+  """
+  current points of each driver on the grid right now
+  """
 
     drivers = {
         "Kimi Antonelli": 390,
@@ -188,14 +243,18 @@ def make_starting_state() -> State:
     return State(season, drivers, "", 0, 0, constructors)
 
 
-starting = make_starting_state()
-assert_equal(len(starting.season), 23)
-assert_equal(starting.season[0].track, "Albert Park")
-assert_equal(starting.season[0].completed, True)
-assert_equal(len(starting.drivers), 25)
-assert_equal(starting.selected_driver, "")
-assert_equal(starting.quiz_score, 0)
-assert_equal(starting.question_number, 0)
+def test_starting_state() -> None:
+    """Checks the initial data without creating a non-constant global variable."""
+    starting = make_starting_state()
+    assert_equal(len(starting.season), 23)
+    assert_equal(starting.season[0].track, "Albert Park")
+    assert_equal(starting.season[0].completed, True)
+    assert_equal(len(starting.drivers), 25)
+    assert_equal(starting.selected_driver, "")
+    assert_equal(starting.quiz_score, 0)
+    assert_equal(starting.question_number, 0)
+
+test_starting_state()
 
 
 # ======================================================================
@@ -318,18 +377,23 @@ def record_result(state: State, track: str, winner: str) -> str:
     return "Race not found."
 
 
-test_state = make_starting_state()
-assert_equal(record_result(test_state, "Las Vegas Strip Circuit", "Kimi Antonelli"),
-             "Kimi Antonelli won at Las Vegas Strip Circuit.")
-assert_equal(test_state.season[20].completed, True)
-assert_equal(test_state.season[20].winner, "Kimi Antonelli")
-assert_equal(test_state.drivers["Kimi Antonelli"], 415)
-assert_equal(test_state.constructors["Mercedes"], 677)
-assert_equal(record_result(test_state, "Las Vegas Strip Circuit", "Max Verstappen"),
-             "That race already has a result.")
-assert_equal(record_result(test_state, "Lusail", "Nobody"), "That driver is not on the grid.")
-assert_equal(record_result(test_state, "Atlantis", "Kimi Antonelli"), "Race not found.")
-assert_equal(find_next_race(test_state.season), "Lusail")
+def test_record_result() -> None:
+    """Checks result recording and validation using local test state."""
+    test_state = make_starting_state()
+    assert_equal(record_result(test_state, "Las Vegas Strip Circuit", "Kimi Antonelli"),
+                 "Kimi Antonelli won at Las Vegas Strip Circuit.")
+    assert_equal(test_state.season[20].completed, True)
+    assert_equal(test_state.season[20].winner, "Kimi Antonelli")
+    assert_equal(test_state.drivers["Kimi Antonelli"], 415)
+    assert_equal(test_state.constructors["Mercedes"], 677)
+    assert_equal(record_result(test_state, "Las Vegas Strip Circuit", "Max Verstappen"),
+                 "That race already has a result.")
+    assert_equal(record_result(test_state, "Lusail", "Nobody"), "That driver is not on the grid.")
+    assert_equal(record_result(test_state, "Atlantis", "Kimi Antonelli"), "Race not found.")
+    assert_equal(find_next_race(test_state.season), "Lusail")
+
+
+test_record_result()
 
 
 def check_answer(guess: str, correct: str) -> bool:
