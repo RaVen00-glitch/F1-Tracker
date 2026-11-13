@@ -9,7 +9,7 @@ set_website_framed(False)
 set_site_information("Saumya Bhavsar", 
                      "F1 Tracker",
                     planning = "https://docs.google.com/document/d/1_5GNEVvNfyI6qp15A4fnTVAZitKaE4PsM-B88TpBANU/edit?usp=sharing",
-                    sources = "Claude and ChatGPT: https://docs.google.com/document/d/1YzF5rUaQT-8HzOwzh5b-wChEvR_sSiOtOhXIqNu0qqE/edit?usp=sharing"
+                    sources = "Claude and ChatGPT: https://docs.google.com/document/d/1YzF5rUaQT-8HzOwzh5b-wChEvR_sSiOtOhXIqNu0qqE/edit?usp=sharing",
                     links = ["https://github.com/RaVen00-glitch/F1-Tracker"]
                     )
 
@@ -50,7 +50,7 @@ DRIVER_TEAMS = {
     "Rafael Camara": "Haas F1 Team",
 }
 
- """
+"""
  Official constructor standings are stored separately because driver points
  do not always add up directly to constructor points after driver changes.
  """
@@ -207,9 +207,9 @@ def make_starting_state() -> State:
         Race("Yas Marina", "United Arab Emirates", "Grand Prix", False, "", "Dec 4-6"),
     ]
 
-  """
-  current points of each driver on the grid right now
-  """
+    """
+        current points of each driver on the grid right now
+    """
 
     drivers = {
         "Kimi Antonelli": 390,
@@ -589,4 +589,3 @@ def restart_quiz(state: State) -> Page:
 
 
 start_server(make_starting_state())
-
